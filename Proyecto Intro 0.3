@@ -1,0 +1,47 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.io.*;
+import java.util.StringTokenizer;
+
+public class proyextFinalIntro {
+
+
+	public static void main(String[] args) throws IOException {
+		File archivo = new File("C:\\Users\\Davit\\Desktop\\Texto.txt");
+		FileReader fr = new FileReader(archivo);
+		BufferedReader br = new BufferedReader(fr);
+		String linea = br.readLine();
+		String texto = "";
+		while ((linea = br.readLine()) != null) {
+			if(linea.contains(",")) {
+				System.out.println(linea.replace(',', ' '));
+				texto=texto+"\n"+linea.replace(',', ' ');
+			}
+			else if(linea.contains("stu.")) {
+				System.out.println(linea.subSequence(linea.indexOf(".")+1, linea.length()));
+				texto=texto+"\n"+linea.subSequence(linea.indexOf(".")+1, linea.length());
+			}
+			else if(linea.contains("com")) {
+				System.out.println(linea.subSequence(linea.indexOf(".")+1,linea.length()));
+				texto=texto+"\n"+linea.subSequence(linea.indexOf(".")+1, linea.length());
+
+			}
+			
+			
+			else {
+				System.out.println(linea);
+				texto=texto+"\n"+linea;
+			}
+		}
+		StringTokenizer st = new StringTokenizer(texto);
+System.out.println(texto);
+		while(st.hasMoreTokens()) {
+			
+		}
+		
+		System.out.println(texto);
+		System.out.println("");
+		ArrayList<String> textoarray = new ArrayList<String>();
+
+	}
+}
