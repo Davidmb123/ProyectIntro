@@ -1,0 +1,21 @@
+import java.util.Scanner;
+
+public class GenerarExcel {
+	
+	public static Generar g=new Generar() ;
+		
+	
+public static void main(String[] args) {
+	Scanner leer= new Scanner(System.in);
+	String[][] entrada=new String[4][4];
+	entrada[0][0]="Nombre";
+	entrada[0][1]="Ap. Paterno";
+	entrada[0][2]="Ap. Materno";
+	entrada[0][3]="Edad";
+	System.out.println("Ingrese el nombre de su hoja");
+	String nomHoja=leer.next();
+
+	String ruta="/Users/Davit/Desktop/"+nomHoja+".xls";
+	g.generarExcel(entrada, ruta,nomHoja);
+}
+}
