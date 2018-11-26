@@ -24,28 +24,46 @@ public class Generar {
 		int stus = 1;
 		int coms = 0;
 		String texto = "";
-		String nomtab1;
-		String nomtab2;
+		String texto2 = "";
+		String nomtab1 = "";
+		String nomtab2 = "";
 
 		while ((linea = br.readLine()) != null) {
 			lincant++;
-			 if (linea.contains(".") && linea.contains("com")&&linea.contains("=")) {
-					texto = texto +" "+linea.substring(linea.indexOf(".") + 1, linea.indexOf("=")-1)+" "+linea.substring(linea.lastIndexOf(".")+1,linea.length());
-					
-			 }
-			else if (linea.contains(".") && !linea.endsWith(",")) {
-				texto = texto + " " + linea.substring(linea.indexOf('.') + 1, linea.length());
+			if (linea.contains(".") && linea.contains("com") && linea.contains("=") && linea.contains("ON")) {
+				texto = texto + " " + linea.substring(linea.indexOf(".") + 1, linea.indexOf("=") - 1) + " "
+						+ linea.substring(linea.lastIndexOf(".") + 1, linea.length());
+				texto2 = texto2 + " " + linea.substring(3, linea.indexOf(".")) + " "
+						+ linea.substring(linea.indexOf("=") + 1, linea.lastIndexOf("."));
+
+			} else if (linea.contains(".") && !linea.endsWith(",")) {
+				if (linea.contains("WHERE")) {
+					texto = texto + " " + linea.substring(linea.indexOf(".") + 1, linea.indexOf("=") - 1);
+					texto2 = texto2 + " " + linea.substring(linea.indexOf(" "), linea.indexOf("."));
+				} else if (linea.contains("ORDER")) {
+					texto = texto + " " + linea.substring(linea.indexOf(".") + 1, linea.lastIndexOf(" "));
+
+					texto2 = texto2 + " " + linea.substring(linea.indexOf("Y ") + 1, linea.indexOf("."));
+
+				} else {
+					texto2 = texto2 + " " + linea.substring(0, linea.indexOf("."));
+					texto = texto + " " + linea.substring(linea.indexOf('.') + 1, linea.length());
+
+				}
+
 			} else if (linea.contains(".") && linea.endsWith(",")) {
 				texto = texto + " " + linea.substring(linea.indexOf('.') + 1, linea.length() - 1);
+				texto2 = texto2 + " " + linea.substring(0, linea.indexOf("."));
+
 			} else if (linea.equals("FROM") || linea.equals("SELECT")) {
 				texto = texto;
 
 			} else if (linea.contains("JOIN")) {
 				texto = texto + linea.replace(linea.substring(linea.lastIndexOf("J"), linea.lastIndexOf("N") + 1), "");
-
+				texto2 = texto2 + linea.substring(linea.indexOf(" "), linea.length());
 			} else {
 				texto = texto + " " + linea;
-
+				texto2 = texto2 + " " + linea;
 			}
 
 		}
@@ -54,17 +72,52 @@ public class Generar {
 			System.out.println(texto.substring(0, texto.length() - 4));
 			texto = texto.substring(0, texto.length() - 4);
 		}
+		System.out.println(texto);
 		StringTokenizer st = new StringTokenizer(texto);
+		StringTokenizer st2 = new StringTokenizer(texto2);
 		int tok = st.countTokens();
+		int i = 0;
+		String aux = null;
+		int tok2 = st2.countTokens();
+		String linea2 = br.readLine();
 
-		String[][] textoarray = new String[tok][tok];
+		System.out.println(texto2);
+		String[][] textoarray = new String[2][tok2 + 1];
+
 		textoarray[0][0] = "TableName";
 		textoarray[1][0] = "ColumnName";
 		System.out.println(tok);
+		System.out.println(tok2);
+		int c = 0;
 		for (int j = 1; j < tok; j++) {
-			textoarray[1][j] = st.nextToken();
-		}
 
+			textoarray[1][j] = st.nextToken();
+			textoarray[0][j] = st2.nextToken();
+			System.out.println(textoarray[0][j] + "   " + textoarray[1][j]);
+			if (textoarray[0][j].equals(textoarray[1][j])) {
+				aux = textoarray[0][j];
+				c++;
+			}
+			if (c == 1 && textoarray[0][j].length() > 3) {
+				nomtab1 = aux;
+			} else if (c > 1 && textoarray[0][j].length() > 3) {
+				nomtab2 = aux;
+			}
+
+		}
+		for (int j = 1; j < tok; j++) {
+			if (textoarray[0][j].contains(nomtab1.substring(0, 2))&&!textoarray[1][j].contains(".")) {
+				textoarray[0][j] = nomtab1;
+
+			} else if (textoarray[0][j].contains(nomtab2.substring(0, 2))&&!textoarray[1][j].contains(".")) {
+				textoarray[0][j] = nomtab2;
+
+			}
+
+		}
+		
+		System.out.println(nomtab1);
+		System.out.println(nomtab2);
 		return textoarray;
 	}
 
